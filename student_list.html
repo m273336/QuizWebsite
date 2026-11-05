@@ -1,31 +1,73 @@
 
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Quiz Portal</title>
-    <style type="text/css">
-        table, td, th{
-        border: 1px solid black;
-        }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Teacher student management page for MID Quiz.">
+    <title>MID Quiz - Student List</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <h1>Teacher Homepage</h1>
+    <div class="page">
 
-    <table>
-        <tr>
-            <td>Student Name</td>
-            <td>Score #1</td>
-            <td>Average</td>
-        </tr>
-        <tr>
-            <td>another cell</td>
-            <td>another cell</td>
-            <td>another cell</td>
-        </tr>
+        <header>
+            <h1>MID Quiz</h1>
+            <p>Teacher Portal</p>
+        </header>
 
-    </table>
+        <nav>
+            <a href="teacher-dashboard.html">Dashboard</a>
+            <a href="student_list.html">Students</a>
+            <a href="index.html">Logout</a>
+        </nav>
 
+        <main>
+            <section>
+                <h2>Student Management</h2>
+                <p>View and manage students enrolled in your classes.</p>
+            </section>
+
+            <section>
+                <h2>Student Overview</h2>
+                <p>Total Students: <span id="total-students">0</span></p>
+            </section>
+
+            <section>
+                <h2>Student List</h2>
+
+                <label for="student-search">Search Students:</label>
+                <input
+                    type="search"
+                    id="student-search"
+                    name="student-search"
+                    placeholder="Search by name or username..."
+                >
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Full Name</th>
+                            <th>Username</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="student-table-body">
+                        <!-- Student records will be added here later. -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+        <footer>
+            <p>MID Quiz - Teacher Portal</p>
+        </footer>
+
+    </div>
 </body>
+
 </html>
