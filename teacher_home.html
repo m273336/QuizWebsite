@@ -1,17 +1,44 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Quiz Portal</title>
-</head>
-<body>
-    <h1>Teacher Homepage</h1>
-    <p>Blha blah blah</p>
+<html lang="en">
 
-    <form method="post" action="create_quiz.php">
-        <button type="submit" class="create-quiz-btn">Create Quiz</button>
-    </form>
-    <form method="post" action="student_list.php">
-        <button type="submit" class="show-students-btn">Show Student List</button>
-    </form>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MID Quiz - Teacher Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="page">
+        <header>
+            <h1>Teacher Page</h1>
+        </header>
+
+        <main>
+            <h2>Welcome, Teacher!</h2>
+            <p>This page will allow teachers to manage quizzes and view students' scores.</p>
+
+            <section>
+                <h2>Quizzes</h2>
+                <p><a href="create-quiz.html">Create a New Quiz</a></p>
+                <table>
+                    <tr>
+                        <th>Quiz Title</th>
+                        <th>Status</th>
+                    </tr>
+                    <tr>
+                        <td>No quizzes yet</td>
+                        <td>Not available</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section>
+                <h2>Student Grades</h2>
+                <p>Student grades will appear here after the database is connected.</p>
+            </section>
+        </main>
+    </div>
 </body>
+
 </html>
