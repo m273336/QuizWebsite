@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MID Quiz - Student Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="page">
+        <header>
+            <h1>MID Quiz</h1>
+        </header>
+
+        <main>
+            <h2>Student Dashboard</h2>
+            <p>Welcome, Student!</p>
+            <p>Here you can take available quizzes and view your past scores.</p>
+
+            <section>
+                <h2>Available Quizzes</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Quiz</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Example quizzes. Replace with database data later. -->
+                        <tr>
+                            <td>Week 1 Web Dev Quiz</td>
+                            <td>Not Started</td>
+                            <td><a href="quiz.html?id=week1">Take Quiz</a></td>
+                        </tr>
+                        <tr>
+                            <td>HTML Basics Quiz</td>
+                            <td>Not Started</td>
+                            <td><a href="quiz.html?id=html-basics">Take Quiz</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section>
+                <h2>Completed Quizzes</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Quiz</th>
+                            <th>Score</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Example result. Replace with real grades later. -->
+                        <tr>
+                            <td>Intro to Web Development</td>
+                            <td>90%</td>
+                            <td><a href="results.html?id=intro-web">View Results</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <p><small>These quizzes and scores are examples until the backend is connected.</small></p>
+        </main>
+
+        <footer>
+            <p><a href="login.html">Back to Login</a></p>
+        </footer>
+    </div>
+</body>
+
+</html>
