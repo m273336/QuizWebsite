@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MID Quiz - Create Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="page">
+        <header>
+            <h1>MID Quiz</h1>
+            <p>Teacher Portal</p>
+        </header>
+
+        <main>
+            <h2>Create a New Quiz</h2>
+            <p>Enter the quiz information and add questions below.</p>
+
+            <form action="create-quiz-process.php" method="post" id="quiz-form">
+
+                <section>
+                    <h2>Quiz Information</h2>
+
+                    <label for="quiz-title">Quiz Title:</label>
+                    <input type="text" id="quiz-title" name="quiz_title"
+                           placeholder="Example: Week 1 Web Dev Quiz" required>
+
+                    <label for="quiz-description">Quiz Description:</label>
+                    <textarea id="quiz-description" name="quiz_description"
+                              rows="3" placeholder="Enter a description..."></textarea>
+                </section>
+
+                <section>
+                    <h2>Quiz Questions</h2>
+                    <p>Add multiple-choice questions and select the correct answer.</p>
+
+                    <div id="questions-container">
+                        <!-- Questions will be added here -->
+                    </div>
+
+                    <button type="button" onclick="addQuestion()">
+                        Add Another Question
+                    </button>
+                </section>
+
+                <section>
+                    <h2>Publish Quiz</h2>
+                    <p>Review your questions before publishing.</p>
+
+                    <button type="submit">Create Quiz</button>
+                </section>
+            </form>
+
+            <p><small>
+                Quiz creation will be saved when the backend is connected.
+            </small></p>
+
+            <p><a href="teacher_home.html">Back to Teacher Dashboard</a></p>
+        </main>
+
+        <footer>
+            <p>MID Quiz - Teacher Portal</p>
+        </footer>
+    </div>
+
+    <script>
+        var questionCount = 0;
+
+        // Add a new multiple-choice question
+        function addQuestion() {
+            questionCount++;
+
+            var container = document.getElementById("questions-container");
+            var questionDiv = document.createElement("div");
+
+            questionDiv.className = "question-block";
+            questionDiv.id = "question-" + questionCount;
+
+            questionDiv.innerHTML = `
+                <fieldset>
+                    <legend>Question ${questionCount}</legend>
+
+                    <label for="question-text-${questionCount}">
+                        Question:
+                    </label>
+                    <input type="text"
+                           id="question-text-${questionCount}"
+                           name="questions[${questionCount}][text]"
+                           placeholder="Enter your question"
+                           required>
+
+                    <p>Answer Choices:</p>
+
+                    <label for="q${questionCount}-a">Choice A:</label>
+                    <input type="text" id="q${questionCount}-a"
+                           name="questions[${questionCount}][choices][A]"
+                           required>
+
+                    <label for="q${questionCount}-b">Choice B:</label>
+                    <input type="text" id="q${questionCount}-b"
+                           name="questions[${questionCount}][choices][B]"
+                           required>
+
+                    <label for="q${questionCount}-c">Choice C:</label>
+                    <input type="text" id="q${questionCount}-c"
+                           name="questions[${questionCount}][choices][C]"
+                           required>
+
+                    <label for="q${questionCount}-d">Choice D:</label>
+                    <input type="text" id="q${questionCount}-d"
+                           name="questions[${questionCount}][choices][D]"
+                           required>
+
+                    <label for="correct-${questionCount}">
+                        Correct Answer:
+                    </label>
+                    <select id="correct-${questionCount}"
+                            name="questions[${questionCount}][correct]"
+                            required>
+                        <option value="">Select Correct Answer</option>
+                        <option value="A">Choice A</option>
+                        <option value="B">Choice B</option>
+                        <option value="C">Choice C</option>
+                        <option value="D">Choice D</option>
+                    </select>
+
+                    <p>
+                        <button type="button"
+                                onclick="removeQuestion(${questionCount})">
+                            Remove Question
+                        </button>
+                    </p>
+                </fieldset>
+            `;
+
+            container.appendChild(questionDiv);
+        }
+
+        // Remove a question from the quiz
+        function removeQuestion(questionId) {
+            var question = document.getElementById("question-" + questionId);
+            var container = document.getElementById("questions-container");
+
+            if (container.children.length <= 1) {
+                alert("A quiz must have at least one question.");
+                return;
+            }
+
+            if (question) {
+                question.remove();
+            }
+        }
+
+        // Start with one question
+        addQuestion();
+    </script>
+</body>
+
+</html>
