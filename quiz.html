@@ -1,140 +1,79 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MID Quiz - Take Quiz</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
     <div class="page">
-        <header>
-            <h1>MID Quiz</h1>
-        </header>
-
+        <header><h1>MID Quiz</h1></header>
         <main>
             <h2 id="quiz-title">Take Quiz</h2>
             <p id="quiz-description">Choose one answer for each question.</p>
-
-            <!-- Example questions until loaded from database -->
-            <form action="submit-quiz.php" method="post" id="quiz-form">
-                <input type="hidden" id="quiz-id" name="quiz_id" value="week1">
+            <p id="quiz-message" role="status">Loading quiz...</p>
+            <!-- Submission / grading will be connected in the next feature. -->
+            <form action="submit-quiz.php" method="post" id="quiz-form" hidden>
+                <input type="hidden" id="quiz-id" name="quiz_id">
                 <div id="questions"></div>
-                <p><button type="submit">Submit Quiz</button></p>
+                <p><button type="submit" disabled>Submit Quiz (coming soon)</button></p>
             </form>
-
-            <p id="quiz-message" hidden></p>
-            <p><small>Sample quiz questions for now. Answers will only be graded and saved when the backend is connected.</small></p>
             <p><a href="student-dashboard.html">Back to Student Dashboard</a></p>
         </main>
-
-        <footer>
-            <p>MID Quiz - Student Quiz</p>
-        </footer>
+        <footer><p>MID Quiz - Student Quiz</p></footer>
     </div>
-
     <script>
-        // Example quizzes matching student-dashboard.html.
-        // Later, the backend will load questions from the database.
-        var quizzes = {
-            "week1": {
-                title: "Week 1 Web Dev Quiz",
-                questions: [
-                    {
-                        text: "What does HTML stand for?",
-                        choices: [
-                            "HyperText Markup Language",
-                            "HighText Machine Language",
-                            "Home Tool Markup Language",
-                            "Hyperlink Text Management Language"
-                        ]
-                    },
-                    {
-                        text: "Which HTML element links an external CSS file?",
-                        choices: [
-                            "<script>",
-                            "<style>",
-                            "<link>",
-                            "<css>"
-                        ]
-                    },
-                    {
-                        text: "What is CSS mainly used for?",
-                        choices: [
-                            "Saving quiz answers",
-                            "Styling web pages",
-                            "Creating databases",
-                            "Running a web server"
-                        ]
-                    }
-                ]
-            },
-            "html-basics": {
-                title: "HTML Basics Quiz",
-                questions: [
-                    {
-                        text: "Which HTML tag is used for the largest heading?",
-                        choices: ["<h6>", "<h1>", "<head>", "<header>"]
-                    },
-                    {
-                        text: "Which HTML tag creates a link to another page?",
-                        choices: ["<p>", "<a>", "<div>", "<img>"]
-                    },
-                    {
-                        text: "Which element creates an unordered list?",
-                        choices: ["<ol>", "<li>", "<ul>", "<list>"]
-                    }
-                ]
+        async function loadQuiz() {
+            const id = new URLSearchParams(window.location.search).get("id");
+            const form = document.getElementById("quiz-form");
+            const message = document.getElementById("quiz-message");
+            if (!id) {
+                message.textContent = "No quiz was selected.";
+                return;
             }
-        };
+            try {
+                const response = await fetch(
+                    "get-quizzes.php?id=" + encodeURIComponent(id),
+                    { credentials: "same-origin" }
+                );
+                const quiz = await response.json();
+                if (!response.ok) throw new Error(quiz.error || "Quiz not available.");
+                if (!Array.isArray(quiz.questions)) throw new Error("Invalid quiz data.");
 
-        // Get quiz ID from the URL
-        var quizId = new URLSearchParams(window.location.search).get("id") || "week1";
-        var quiz = quizzes[quizId];
-        var form = document.getElementById("quiz-form");
-        var questionsContainer = document.getElementById("questions");
+                document.getElementById("quiz-title").textContent = quiz.title;
+                document.getElementById("quiz-description").textContent =
+                    quiz.description || "Choose one answer for each question.";
+                document.getElementById("quiz-id").value = quiz.id;
 
-        if (!quiz) {
-            document.getElementById("quiz-title").textContent = "Quiz Not Found";
-            document.getElementById("quiz-description").textContent = "This sample quiz is not available.";
-            document.getElementById("quiz-message").hidden = true;
-            form.hidden = true;
-        } else {
-            document.getElementById("quiz-title").textContent = quiz.title;
-            document.getElementById("quiz-id").value = quizId;
-
-            // Create each quiz question
-            quiz.questions.forEach(function (question, questionIndex) {
-                var section = document.createElement("section");
-                var fieldset = document.createElement("fieldset");
-                var legend = document.createElement("legend");
-
-                legend.textContent = "Question " + (questionIndex + 1) + ": " + question.text;
-                fieldset.appendChild(legend);
-
-                // Create multiple-choice radio buttons
-                question.choices.forEach(function (choice, choiceIndex) {
-                    var label = document.createElement("label");
-                    var radio = document.createElement("input");
-
-                    radio.type = "radio";
-                    radio.name = "answers[q" + (questionIndex + 1) + "]";
-                    radio.value = String(choiceIndex + 1);
-                    radio.required = true;
-
-                    label.appendChild(radio);
-                    label.appendChild(document.createTextNode(" " + choice));
-                    fieldset.appendChild(label);
+                const container = document.getElementById("questions");
+                quiz.questions.forEach((question, index) => {
+                    const section = document.createElement("section");
+                    const fieldset = document.createElement("fieldset");
+                    const legend = document.createElement("legend");
+                    legend.textContent = "Question " + (index + 1) + ": " + question.text;
+                    fieldset.appendChild(legend);
+                    ["A", "B", "C", "D"].forEach(letter => {
+                        const label = document.createElement("label");
+                        const radio = document.createElement("input");
+                        radio.type = "radio";
+                        radio.name = "answers[q" + (index + 1) + "]";
+                        radio.value = letter;
+                        radio.required = true;
+                        label.append(radio, document.createTextNode(" " + letter + ". " +
+                            (question.choices[letter] || "")));
+                        fieldset.appendChild(label);
+                    });
+                    section.appendChild(fieldset);
+                    container.appendChild(section);
                 });
-
-                section.appendChild(fieldset);
-                questionsContainer.appendChild(section);
-            });
+                form.hidden = false;
+                message.textContent = "Quiz preview — submitting and grading will be added next.";
+            } catch (error) {
+                message.textContent = error.message;
+            }
         }
+        loadQuiz();
     </script>
 </body>
-
 </html>
