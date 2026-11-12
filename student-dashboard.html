@@ -1,79 +1,63 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MID Quiz - Student Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
     <div class="page">
-        <header>
-            <h1>MID Quiz</h1>
-        </header>
-
+        <header><h1>MID Quiz</h1></header>
         <main>
             <h2>Student Dashboard</h2>
             <p>Welcome, Student!</p>
             <p>Here you can take available quizzes and view your past scores.</p>
-
             <section>
                 <h2>Available Quizzes</h2>
+                <p id="quiz-status" role="status">Loading quizzes...</p>
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Quiz</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Example quizzes. Replace with database data later. -->
-                        <tr>
-                            <td>Week 1 Web Dev Quiz</td>
-                            <td>Not Started</td>
-                            <td><a href="quiz.html?id=week1">Take Quiz</a></td>
-                        </tr>
-                        <tr>
-                            <td>HTML Basics Quiz</td>
-                            <td>Not Started</td>
-                            <td><a href="quiz.html?id=html-basics">Take Quiz</a></td>
-                        </tr>
-                    </tbody>
+                    <thead><tr><th>Quiz</th><th>Status</th><th>Action</th></tr></thead>
+                    <tbody id="available-quizzes"></tbody>
                 </table>
             </section>
-
             <section>
                 <h2>Completed Quizzes</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Quiz</th>
-                            <th>Score</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Example result. Replace with real grades later. -->
-                        <tr>
-                            <td>Intro to Web Development</td>
-                            <td>90%</td>
-                            <td><a href="results.html?id=intro-web">View Results</a></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <p>Completed quizzes and grades will appear here when the submissions backend is added.</p>
             </section>
-
-            <p><small>These quizzes and scores are examples until the backend is connected.</small></p>
         </main>
-
-        <footer>
-            <p><a href="login.html">Back to Login</a></p>
-        </footer>
+        <footer><p><a href="login.html">Back to Login</a></p></footer>
     </div>
-</body>
+    <script>
+        async function loadQuizzes() {
+            const status = document.getElementById("quiz-status");
+            const table = document.getElementById("available-quizzes");
+            try {
+                const response = await fetch("get-quizzes.php", { credentials: "same-origin" });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || "Unable to load quizzes.");
+                if (!Array.isArray(data)) throw new Error("Unexpected quiz response.");
 
+                status.textContent = data.length ? "" : "No quizzes are available yet.";
+                for (const quiz of data) {
+                    const row = document.createElement("tr");
+                    const name = document.createElement("td");
+                    const state = document.createElement("td");
+                    const action = document.createElement("td");
+                    const link = document.createElement("a");
+                    name.textContent = quiz.title;
+                    state.textContent = "Available";
+                    link.href = "quiz.html?id=" + encodeURIComponent(quiz.id);
+                    link.textContent = "Take Quiz";
+                    action.appendChild(link);
+                    row.append(name, state, action);
+                    table.appendChild(row);
+                }
+            } catch (error) {
+                status.textContent = error.message;
+            }
+        }
+        loadQuizzes();
+    </script>
+</body>
 </html>
