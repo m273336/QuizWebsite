@@ -7,8 +7,24 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit("Method not allowed.");
 }
 
-// Your teammate's login handler must set these trusted session values.
-if (empty($_SESSION["user_id"]) || ($_SESSION["role"] ?? "") !== "teacher") {
+
+// Local development testing only.
+// Enable using MID_QUIZ_TEST_MODE=1 on a localhost PHP server.
+$testMode = getenv("MID_QUIZ_TEST_MODE") === "1"
+    && in_array(
+        $_SERVER["REMOTE_ADDR"] ?? "",
+        ["127.0.0.1", "::1"],
+        true
+    );
+
+if ($testMode) {
+    $_SESSION["user_id"] = "test-teacher";
+    $_SESSION["role"] = "teacher";
+}
+
+// Require an authenticated teacher.
+if (empty($_SESSION["user_id"]) ||
+    ($_SESSION["role"] ?? "") !== "teacher") {
     http_response_code(403);
     exit("Only logged-in teachers can create quizzes.");
 }
